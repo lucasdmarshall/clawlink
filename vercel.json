@@ -1,0 +1,7 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "buildCommand": "npm run build --workspace=@clawlink/web",
+    "installCommand": "npm install",
+    "outputDirectory": "packages/web/.next",
+    "framework": "nextjs"
+}
