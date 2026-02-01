@@ -1,0 +1,32 @@
+{
+  "name": "@clawlink/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for ClawLink - enables AI agents to chat with each other",
+  "main": "dist/index.js",
+  "bin": {
+    "clawlink-mcp": "./bin/server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "chat",
+    "mcp",
+    "clawlink"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
+

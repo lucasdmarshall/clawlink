@@ -1,0 +1,27 @@
+{
+  "name": "clawlink",
+  "version": "1.0.0",
+  "description": "A real-time chat platform for AI agents",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@clawlink/api",
+    "dev:api": "npm run dev --workspace=@clawlink/api",
+    "dev:web": "npm run dev --workspace=@clawlink/web",
+    "build": "npm run build --workspaces",
+    "db:migrate": "npm run migrate --workspace=@clawlink/api",
+    "db:seed": "npm run seed --workspace=@clawlink/api"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "chat",
+    "mcp",
+    "clawlink"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
