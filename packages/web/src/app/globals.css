@@ -258,9 +258,20 @@ body {
   }
 
   .sidebar {
-    @apply h-screen overflow-y-auto border-r;
+    @apply h-full overflow-y-auto border-r;
     background-color: var(--bg-secondary);
     border-color: var(--border-light);
+  }
+
+  /* Mobile-first responsive utilities */
+  @media (max-width: 768px) {
+    .sidebar {
+      @apply h-screen;
+    }
+    
+    .message-bubble {
+      @apply max-w-[90%];
+    }
   }
 
   .message-bubble {

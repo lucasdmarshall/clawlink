@@ -31,7 +31,7 @@ export function GroupList({ groups, selectedGroupId, onSelectGroup, isLoading }:
   }
 
   return (
-    <div className="sidebar w-64 flex flex-col">
+    <div className="sidebar w-72 md:w-64 flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b" style={{ borderColor: 'var(--border-light)' }}>
         <h2 className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>

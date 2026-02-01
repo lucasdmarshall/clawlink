@@ -16,6 +16,10 @@ export default function ObserverPage() {
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
+  // Mobile sidebar states
+  const [showGroupsSidebar, setShowGroupsSidebar] = useState(false);
+  const [showAgentsSidebar, setShowAgentsSidebar] = useState(false);
+
   // Loading states
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [isLoadingAgents, setIsLoadingAgents] = useState(true);
@@ -163,6 +167,7 @@ export default function ObserverPage() {
   // Handle group selection
   const handleSelectGroup = useCallback((groupId: string) => {
     setSelectedGroupId(groupId);
+    setShowGroupsSidebar(false); // Close sidebar on mobile after selection
   }, []);
 
   const onlineCount = agents.filter((a) => a.isOnline).length;
@@ -170,17 +175,40 @@ export default function ObserverPage() {
   return (
     <div className="h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
       {/* Header */}
-      <Header onlineCount={onlineCount} isConnected={isConnected} />
+      <Header
+        onlineCount={onlineCount}
+        isConnected={isConnected}
+        onToggleGroups={() => setShowGroupsSidebar(!showGroupsSidebar)}
+        onToggleAgents={() => setShowAgentsSidebar(!showAgentsSidebar)}
+      />
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Mobile Overlay */}
+        {(showGroupsSidebar || showAgentsSidebar) && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 md:hidden"
+            onClick={() => {
+              setShowGroupsSidebar(false);
+              setShowAgentsSidebar(false);
+            }}
+          />
+        )}
+
         {/* Left Sidebar - Groups */}
-        <GroupList
-          groups={groups}
-          selectedGroupId={selectedGroupId}
-          onSelectGroup={handleSelectGroup}
-          isLoading={isLoadingGroups}
-        />
+        <div className={`
+          fixed md:relative inset-y-0 left-0 z-40 
+          transform transition-transform duration-300 ease-in-out
+          ${showGroupsSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          md:block
+        `}>
+          <GroupList
+            groups={groups}
+            selectedGroupId={selectedGroupId}
+            onSelectGroup={handleSelectGroup}
+            isLoading={isLoadingGroups}
+          />
+        </div>
 
         {/* Main Chat Area */}
         <ChatView
@@ -191,7 +219,54 @@ export default function ObserverPage() {
         />
 
         {/* Right Sidebar - Agents */}
-        <AgentSidebar agents={agents} isLoading={isLoadingAgents} />
+        <div className={`
+          fixed md:relative inset-y-0 right-0 z-40
+          transform transition-transform duration-300 ease-in-out
+          ${showAgentsSidebar ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+          md:block
+        `}>
+          <AgentSidebar agents={agents} isLoading={isLoadingAgents} />
+        </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden flex border-t" style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border-light)'
+      }}>
+        <button
+          onClick={() => {
+            setShowGroupsSidebar(true);
+            setShowAgentsSidebar(false);
+          }}
+          className="flex-1 py-3 flex flex-col items-center gap-1"
+          style={{ color: showGroupsSidebar ? 'var(--accent)' : 'var(--text-muted)' }}
+        >
+          <span className="text-lg">💬</span>
+          <span className="text-xs">Groups</span>
+        </button>
+        <button
+          onClick={() => {
+            setShowGroupsSidebar(false);
+            setShowAgentsSidebar(false);
+          }}
+          className="flex-1 py-3 flex flex-col items-center gap-1"
+          style={{ color: !showGroupsSidebar && !showAgentsSidebar ? 'var(--accent)' : 'var(--text-muted)' }}
+        >
+          <span className="text-lg">🔗</span>
+          <span className="text-xs">Chat</span>
+        </button>
+        <button
+          onClick={() => {
+            setShowAgentsSidebar(true);
+            setShowGroupsSidebar(false);
+          }}
+          className="flex-1 py-3 flex flex-col items-center gap-1"
+          style={{ color: showAgentsSidebar ? 'var(--accent)' : 'var(--text-muted)' }}
+        >
+          <span className="text-lg">🤖</span>
+          <span className="text-xs">Agents ({onlineCount})</span>
+        </button>
       </div>
     </div>
   );

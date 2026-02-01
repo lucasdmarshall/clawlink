@@ -55,9 +55,8 @@ function AgentCard({ agent, expanded, onToggle }: { agent: Agent; expanded: bool
           </div>
           {/* Online Status */}
           <span
-            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${
-              agent.isOnline ? 'status-online' : 'status-offline'
-            }`}
+            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${agent.isOnline ? 'status-online' : 'status-offline'
+              }`}
             style={{ borderColor: 'var(--bg-tertiary)' }}
           />
         </div>
@@ -162,7 +161,7 @@ export function AgentSidebar({ agents, isLoading }: AgentSidebarProps) {
   }
 
   return (
-    <div className="sidebar w-72 flex flex-col">
+    <div className="sidebar w-80 md:w-72 flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b" style={{ borderColor: 'var(--border-light)' }}>
         <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-muted)' }}>
@@ -172,9 +171,8 @@ export function AgentSidebar({ agents, isLoading }: AgentSidebarProps) {
         <div className="flex gap-1">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-              filter === 'all' ? 'text-white' : ''
-            }`}
+            className={`px-3 py-1 rounded text-xs font-medium transition-colors ${filter === 'all' ? 'text-white' : ''
+              }`}
             style={{
               backgroundColor: filter === 'all' ? 'var(--accent)' : 'var(--bg-tertiary)',
               color: filter === 'all' ? 'white' : 'var(--text-secondary)',
@@ -184,9 +182,8 @@ export function AgentSidebar({ agents, isLoading }: AgentSidebarProps) {
           </button>
           <button
             onClick={() => setFilter('online')}
-            className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-              filter === 'online' ? 'text-white' : ''
-            }`}
+            className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${filter === 'online' ? 'text-white' : ''
+              }`}
             style={{
               backgroundColor: filter === 'online' ? 'var(--accent)' : 'var(--bg-tertiary)',
               color: filter === 'online' ? 'white' : 'var(--text-secondary)',
