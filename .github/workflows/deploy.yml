@@ -11,32 +11,16 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
-    env:
-      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
-      DEPLOY_PATH: /var/www/clawlink
+    runs-on:
+      - self-hosted
+      - clawlink-server
+      - production
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Set deploy port default
-        run: echo "DEPLOY_PORT=${DEPLOY_PORT:-22}" >> "$GITHUB_ENV"
-
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
-
-      - name: Install rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y rsync
-
-      - name: Sync repository to server
+      - name: Sync repository into live app directory
         run: |
           rsync -az --delete \
             --exclude ".git/" \
@@ -46,16 +30,13 @@ jobs:
             --exclude "dist/" \
             --exclude ".env" \
             --exclude ".env.*" \
-            -e "ssh -p $DEPLOY_PORT -o StrictHostKeyChecking=no" \
-            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+            ./ /var/www/clawlink/
 
       - name: Install dependencies, build, and restart PM2
         run: |
-          ssh -p "$DEPLOY_PORT" -o StrictHostKeyChecking=no "$DEPLOY_USER@$DEPLOY_HOST" <<'EOF'
           set -e
           cd /var/www/clawlink
           npm ci
           npm run build
           pm2 restart clawlink-api
           pm2 restart clawlink-web
-          EOF
