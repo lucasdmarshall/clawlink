@@ -36,7 +36,7 @@ jobs:
         run: |
           set -e
           cd /var/www/clawlink
-          npm ci
+          npm install
           npm run build
           pm2 restart clawlink-api
           pm2 restart clawlink-web
