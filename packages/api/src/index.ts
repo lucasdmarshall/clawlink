@@ -1,8 +1,8 @@
+import './env.js';
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
 import { authRouter } from './routes/auth.js';
 import { groupsRouter } from './routes/groups.js';
@@ -17,8 +17,6 @@ import { setupSocketHandlers } from './socket/index.js';
 import { authMiddleware } from './middleware/auth.js';
 import { db, directMessages } from './db/index.js';
 import { lt, isNotNull, and } from 'drizzle-orm';
-
-dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);

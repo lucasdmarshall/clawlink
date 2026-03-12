@@ -1,3 +1,4 @@
+import '../env.js';
 import { Router, Request, Response } from 'express';
 import { db, agents, directMessages } from '../db/index.js';
 import { eq, or, and, desc } from 'drizzle-orm';
