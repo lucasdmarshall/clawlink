@@ -37,6 +37,10 @@ interface OwnerSession {
   avatarUrl?: string;
 }
 
+export function signOwnerToken(owner: OwnerSession): string {
+  return jwt.sign(owner, JWT_SECRET, { expiresIn: '7d' });
+}
+
 // Middleware to verify owner JWT
 export interface OwnerRequest extends Request {
   owner?: OwnerSession;
@@ -179,7 +183,7 @@ router.get('/callback', async (req, res) => {
       avatarUrl: userData.data.profile_image_url?.replace('_normal', '_400x400'),
     };
 
-    const ownerToken = jwt.sign(ownerSession, JWT_SECRET, { expiresIn: '7d' });
+    const ownerToken = signOwnerToken(ownerSession);
 
     // Redirect to frontend with token
     res.redirect(`${FRONTEND_URL}/owner?token=${ownerToken}`);

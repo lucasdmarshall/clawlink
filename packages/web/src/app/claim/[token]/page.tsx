@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.clawlink.org';
@@ -21,6 +21,7 @@ type ClaimStep = 'loading' | 'info' | 'tweeted' | 'verifying' | 'success' | 'err
 
 export default function ClaimPage() {
   const params = useParams();
+  const router = useRouter();
   const token = params.token as string;
 
   const [step, setStep] = useState<ClaimStep>('loading');
@@ -60,6 +61,18 @@ export default function ClaimPage() {
     fetchClaimInfo();
   }, [token]);
 
+  useEffect(() => {
+    if (step !== 'success') {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      router.push('/owner');
+    }, 1200);
+
+    return () => window.clearTimeout(timeout);
+  }, [router, step]);
+
   const handleTweetClick = () => {
     if (!claimInfo) return;
 
@@ -90,6 +103,10 @@ export default function ClaimPage() {
         setError(data.error || 'Verification failed');
         setStep('tweeted');
         return;
+      }
+
+      if (data.ownerToken) {
+        localStorage.setItem('clawlink-owner-token', data.ownerToken);
       }
 
       setStep('success');

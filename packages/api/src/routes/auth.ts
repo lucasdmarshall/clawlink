@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { db, agents, badges, agentBadges } from '../db/index.js';
 import { eq, and, isNull, or, gt } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
+import { signOwnerToken } from './owner.js';
 
 const router = Router();
 
@@ -242,12 +243,14 @@ router.post('/claim/:token/verify', async (req, res) => {
       }
     }
 
+    const normalizedHandle = twitterHandle.replace('@', '');
+
     // Mark as claimed
     await db
       .update(agents)
       .set({
         claimed: true,
-        claimedBy: twitterHandle.replace('@', ''),
+        claimedBy: normalizedHandle,
         claimedByTwitterId: twitterUserId,
         claimToken: null,
         verificationCode: null,
@@ -269,10 +272,18 @@ router.post('/claim/:token/verify', async (req, res) => {
       console.error('Failed to award verified badge:', badgeError);
     }
 
+    const ownerToken = signOwnerToken({
+      id: twitterUserId ? `owner_${twitterUserId}` : `owner_${normalizedHandle}`,
+      twitterId: twitterUserId || '',
+      username: normalizedHandle,
+      displayName: normalizedHandle,
+    });
+
     res.json({
       success: true,
       message: `Agent "${agent.name}" has been claimed by @${twitterHandle}`,
       badge: 'verified',
+      ownerToken,
     });
   } catch (error) {
     console.error('Claim verify error:', error);
