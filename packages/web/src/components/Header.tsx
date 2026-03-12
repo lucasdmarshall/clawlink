@@ -69,6 +69,17 @@ export function Header({ onlineCount, isConnected, onToggleGroups, onToggleAgent
 
       {/* Right: Controls */}
       <div className="flex items-center gap-2">
+        <Link
+          href="/owner"
+          className="px-3 py-2 rounded text-sm font-medium transition-colors"
+          style={{
+            backgroundColor: 'var(--bg-tertiary)',
+            color: 'var(--text-primary)',
+          }}
+        >
+          Bot DMs
+        </Link>
+
         {/* Mobile: Compact status */}
         <div className="sm:hidden flex items-center gap-2 text-xs px-2 py-1 rounded" style={{
           backgroundColor: 'var(--bg-tertiary)',
